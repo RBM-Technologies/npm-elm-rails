@@ -7,9 +7,16 @@ module Npm
   module Elm
     module Rails
       class Template < Tilt::Template
-        ELM_MAKE_PATH = "#{`npm bin`.strip}/elm-make"
 
         self.default_mime_type = "application/javascript"
+
+        def self.elm_make_path
+          @elm_make_path ||= "#{`npm bin`.strip}/elm-make"
+        end
+
+        def self.elm_make_path=(path)
+          @elm_make_path = path
+        end
 
         def prepare
           # do nothing:  no prep needed
@@ -17,7 +24,7 @@ module Npm
 
         def evaluate(scope, _locals, &_block)
           Dir.chdir(elm_package_root) do
-            ::Elm::Compiler.compile(file, elm_make_path: ELM_MAKE_PATH)
+            ::Elm::Compiler.compile(file, elm_make_path: self.class.elm_make_path)
           end
         end
 
