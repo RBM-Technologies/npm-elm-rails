@@ -8,6 +8,10 @@ module Npm
     module Rails
       class Template < Tilt::Template
 
+        class << self
+          attr_accessor :debug
+        end
+
         self.default_mime_type = "application/javascript"
 
         def self.elm_make_path
@@ -24,11 +28,15 @@ module Npm
 
         def evaluate(scope, _locals, &_block)
           Dir.chdir(elm_package_root) do
-            ::Elm::Compiler.compile(file, elm_make_path: self.class.elm_make_path)
+            ::Elm::Compiler.compile(file_with_debug, elm_make_path: self.class.elm_make_path)
           end
         end
 
         private
+
+        def file_with_debug
+          self.class.debug ? [file, '--debug'] : file
+        end
 
         def elm_package_root
           dir = Pathname.new(file).dirname
