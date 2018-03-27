@@ -26,9 +26,10 @@ module Npm
             module_name = match[:module]
             # e.g. Quiz/QuestionStore
             dependency_logical_name = module_name.tr(".", "/")
-            # e.g. ./Quiz/QuestionStore.elm
-            dependency_path =
-              path.join("..", "#{dependency_logical_name}.elm")
+            # e.g. elm/ProjectName
+            basepath = Pathname.new(File.dirname(context.pathname))
+            # e.g. elm/ProjectName/Quiz/QuestionStore.elm
+            dependency_path = basepath.join("#{dependency_logical_name}.elm")
 
             # If we don't find the dependency in our filesystem, assume it's
             # because it comes in through a third-party package rather than our
