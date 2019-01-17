@@ -15,7 +15,7 @@ module Npm
         self.default_mime_type = "application/javascript"
 
         def self.elm_make_path
-          @elm_make_path ||= "#{`npm bin`.strip}/elm-make"
+          @elm_make_path ||= "#{`npm bin`.strip}/elm make"
         end
 
         def self.elm_make_path=(path)
@@ -41,10 +41,10 @@ module Npm
         def elm_package_root
           dir = Pathname.new(file).dirname
           loop do
-            elm_package = dir + "elm-package.json"
+            elm_package = dir + "elm.json"
             return dir.to_s if elm_package.exist?
 
-            fail "Could not find elm-package.json" if dir.to_s == "/"
+            fail "Could not find elm.json" if dir.to_s == "/"
             dir = dir.parent
           end
         end
