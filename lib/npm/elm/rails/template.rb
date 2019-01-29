@@ -27,7 +27,7 @@ module Npm
         end
 
         def evaluate(scope, _locals, &_block)
-          Dir.chdir(elm_package_root) do
+          Dir.chdir(elm_json_root) do
             ::Elm::Compiler.compile(file_with_debug, elm_make_path: self.class.elm_make_path)
           end
         end
@@ -35,14 +35,21 @@ module Npm
         private
 
         def file_with_debug
-          self.class.debug ? [file, '--debug'] : file
+          # --debug, which enables the time-traveling debugger, has a known bug
+          #
+          # elm: Map.!: given key is not an element in the map
+          # CallStack (from HasCallStack):
+          #   error, called at libraries/containers/Data/Map/Internal.hs:603:17 in containers-0.5.10.2:Data.Map.Internal
+          #
+          # self.class.debug ? [file, '--debug'] : file
+          self.class.debug ? [file] : file
         end
 
-        def elm_package_root
+        def elm_json_root
           dir = Pathname.new(file).dirname
           loop do
-            elm_package = dir + "elm.json"
-            return dir.to_s if elm_package.exist?
+            elm_json = dir + "elm.json"
+            return dir.to_s if elm_json.exist?
 
             fail "Could not find elm.json" if dir.to_s == "/"
             dir = dir.parent
