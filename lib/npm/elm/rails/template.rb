@@ -14,21 +14,21 @@ module Npm
 
         self.default_mime_type = "application/javascript"
 
-        def self.elm_make_path
-          @elm_make_path ||= "#{`npm bin`.strip}/elm make"
+        def self.elm_path
+          @elm_path ||= "#{`npm bin`.strip}/elm make"
         end
 
-        def self.elm_make_path=(path)
-          @elm_make_path = path
+        def self.elm_path=(path)
+          @elm_path = path
         end
 
         def prepare
-          # do nothing:  no prep needed
+          # do nothing: no prep needed
         end
 
         def evaluate(scope, _locals, &_block)
           Dir.chdir(elm_json_root) do
-            ::Elm::Compiler.compile(file_with_debug, elm_make_path: self.class.elm_make_path)
+            ::Elm::Compiler.compile(file_with_debug, elm_path: self.class.elm_path)
           end
         end
 
