@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency "railties",     ">= 3.2"
   s.add_runtime_dependency "tilt",         ">= 1.4"
-  s.add_runtime_dependency "elm-compiler", "~> 0.2.1"
+  # s.add_runtime_dependency "elm-compiler", "~> 0.2.1"
 
   s.files         =
     %w[npm-elm-rails.gemspec] +
