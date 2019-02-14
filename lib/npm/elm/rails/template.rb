@@ -9,7 +9,7 @@ module Npm
       class Template < Tilt::Template
 
         class << self
-          attr_accessor :debug
+          attr_accessor :debug, :optimize
         end
 
         self.default_mime_type = "application/javascript"
@@ -28,22 +28,16 @@ module Npm
 
         def evaluate(scope, _locals, &_block)
           Dir.chdir(elm_json_root) do
-            ::Elm::Compiler.compile(file_with_debug, elm_path: self.class.elm_path)
+            ::Elm::Compiler.compile(
+              file_with_debug,
+              elm_path: self.class.elm_path,
+              debug: self.class.debug,
+              optimize: self.class.optimize
+            )
           end
         end
 
         private
-
-        def file_with_debug
-          # --debug, which enables the time-traveling debugger, has a known bug
-          #
-          # elm: Map.!: given key is not an element in the map
-          # CallStack (from HasCallStack):
-          #   error, called at libraries/containers/Data/Map/Internal.hs:603:17 in containers-0.5.10.2:Data.Map.Internal
-          #
-          # self.class.debug ? [file, '--debug'] : file
-          self.class.debug ? [file] : file
-        end
 
         def elm_json_root
           dir = Pathname.new(file).dirname
