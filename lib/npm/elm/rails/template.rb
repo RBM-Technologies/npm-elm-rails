@@ -29,7 +29,7 @@ module Npm
         def evaluate(scope, _locals, &_block)
           Dir.chdir(elm_json_root) do
             ::Elm::Compiler.compile(
-              file_with_debug,
+              file,
               elm_path: self.class.elm_path,
               debug: self.class.debug,
               optimize: self.class.optimize
