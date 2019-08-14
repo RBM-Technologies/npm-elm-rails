@@ -27,7 +27,8 @@ module Npm
         end
 
         def evaluate(scope, _locals, &_block)
-          Dir.chdir(elm_json_root) do
+          puts "npm-elm-rails 1"
+          blah = Dir.chdir(elm_json_root) do
             ::Elm::Compiler.compile(
               file,
               elm_path: self.class.elm_path,
@@ -35,6 +36,8 @@ module Npm
               optimize: self.class.optimize
             )
           end
+          puts "npm-elm-rails 2"
+          blah
         end
 
         private
